@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History - AI Fake News Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+            border: none;
+        }
+        .table {
+            vertical-align: middle;
+        }
+        /* Custom styling for truncated news text */
+        .text-truncate-custom {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+     <nav class="navbar navbar-dark bg-dark sticky-top">
+        <div class="container-fluid px-4">
+          <a class="navbar-brand fw-bold" href="/">
+             📰 AI Fake News Detector
+          </a>
+           <a href="/" class="btn btn-outline-light px-4 rounded-pill">
+                ← Back to Analyzer
+           </a>
+        </div>
+     </nav>
+
+     <div class="container my-5">
+       <div class="row justify-content-center">
+         <div class="col-12 col-lg-10">
+
+           <div class="card p-4">
+             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                 <h2 class="fw-bold m-0 text-dark">📋 Analysis Audit Log</h2>
+                 <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill">Total Checks: {{ all_news.count }}</span>
+             </div>
+
+             {% if all_news %}
+                 <div class="table-responsive">
+                     <table class="table table-hover table-striped border rounded-3 overflow-hidden">
+                         <thead class="table-dark">
+                             <tr>
+                                 <th scope="col" style="width: 8%">S.No.</th>
+                                 <th scope="col" style="width: 45%">News Content Snippet</th>
+                                 <th scope="col" style="width: 17%" class="text-center">Prediction</th>
+                                 <th scope="col" style="width: 15%" class="text-center">Confidence</th>
+                                 <th scope="col" style="width: 15%" class="text-center">Checked On</th>
+                             </tr>
+                          Polish code strings here -->
+                         </thead>
+                         <tbody>
+                             {% for item in all_news %}
+                             <tr>
+                                 <th scope="row" class="fw-bold text-secondary">{{ forloop.counter }}</th>
+                                 <td>
+                                     <div class="text-truncate-custom text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ item.news_text }}">
+                                         {{ item.news_text }}
+                                     </div>
+                                 </td>
+                                 <td class="text-center">
+                                     {% if item.prediction == "Fake News" %}
+                                         <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill fw-bold">🚨 Fake News</span>
+                                     {% else %}
+                                         <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold">✅ Real News</span>
+                                     {% endif %}
+                                 </td>
+                                 <td class="text-center fw-semibold text-dark">
+                                     {{ item.confidence }}%
+                                 </td>
+                                 <td class="text-center text-muted small">
+                                     {{ item.created_at|date:"M d, Y" }}<br>
+                                     <span class="text-secondary opacity-75">{{ item.created_at|date:"g:i A" }}</span>
+                                 </td>
+                             </tr>
+                             {% endfor %}
+                         </tbody>
+                     </table>
+                 </div>
+             {% else %}
+                 <div class="text-center py-5">
+                     <h3 class="text-muted mb-3">No history records found!</h3>
+                     <p class="text-secondary mb-4">Go back to the home page and start analyzing some news text.</p>
+                     <a href="/" class="btn btn-primary px-4 py-2 rounded-pill">Analyze News Now</a>
+                 </div>
+             {% endif %}
+
+           </div>
+
+         </div>
+       </div>
+     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+     <script>
+         // Tooltips ko active karne ke liye standard Bootstrap code
+         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+           return new bootstrap.Tooltip(tooltipTriggerEl)
+         })
+     </script>
+</body>
+</html>

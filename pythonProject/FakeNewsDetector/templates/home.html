@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fake News Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+            border: none;
+        }
+        /* Hover effects for buttons */
+        .btn-primary {
+            background-color: #5a6fd6;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #4a5cb8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+     <nav class="navbar navbar-dark bg-dark sticky-top">
+        <div class="container-fluid px-4">
+          <a class="navbar-brand fw-bold" href="#">
+             📰 AI Fake News Detector
+          </a>
+           <a href="/history/" class="btn btn-outline-light px-4 rounded-pill">
+                View History
+           </a>
+        </div>
+     </nav>
+
+     <div class="container my-5">
+       <div class="row justify-content-center">
+         <div class="col-md-10 col-lg-8">
+
+           <div class="card p-4 md-5">
+             <h1 class="text-center fw-bold mt-2">📰 AI Fake News Detector</h1>
+             <p class="text-center text-muted mb-4">Machine Learning + Django + NLP</p>
+
+             <form method="POST" class="mb-3">
+                 {% csrf_token %}
+                  <textarea
+                    name="news"
+                    class="form-control rounded-3"
+                    rows="8"
+                    placeholder="Paste the news article text here to check its authenticity..."
+                    required></textarea>
+                   <br>
+                    <button class="btn btn-primary w-100 py-2 fs-5 rounded-3 fw-semibold shadow-sm">
+                      Analyze News
+                    </button>
+             </form>
+
+             {% if result %}
+                 <hr class="my-4">
+
+                 <div class="text-center mb-4">
+                     {% if result == "Fake News" %}
+                         <div class="alert alert-danger d-inline-block px-5 py-3 rounded-pill shadow-sm" role="alert">
+                             <h3 class="alert-heading m-0 fw-bold">🚨 Prediction: {{ result }}</h3>
+                         </div>
+                     {% else %}
+                         <div class="alert alert-success d-inline-block px-5 py-3 rounded-pill shadow-sm" role="alert">
+                             <h3 class="alert-heading m-0 fw-bold">✅ Prediction: {{ result }}</h3>
+                         </div>
+                     {% endif %}
+                 </div>
+
+                 <div class="mx-md-5 mb-4">
+                     <div class="d-flex justify-content-between mb-1 fw-medium text-secondary">
+                         <span>Analysis Confidence</span>
+                         <span>{{ confidence }}%</span>
+                     </div>
+                     <div class="progress rounded-pill shadow-sm" style="height: 22px;">
+                         <div class="progress-bar progress-bar-striped progress-bar-animated {% if result == 'Fake News' %}bg-danger{% else %}bg-success{% endif %}"
+                              role="progressbar"
+                              style="width: {{ confidence }}%;"
+                              aria-valuenow="{{ confidence }}"
+                              aria-valuemin="0"
+                              aria-valuemax="100">
+                         </div>
+                     </div>
+                 </div>
+
+                 <h4 class="text-center text-secondary mb-3">
+                   Text Sentiment: <span class="fw-bold text-dark">{{ sentiment }}</span>
+                 </h4>
+             {% endif %}
+           </div>
+
+           <div class="card mt-4 p-4">
+                <h4 class="fw-bold text-dark mb-3">💡 About Project</h4>
+                <p class="text-secondary lh-lg mb-0">
+                    This AI-powered Fake News Detection System uses Machine Learning,
+                    <strong>TF-IDF Vectorization</strong>, <strong>Logistic Regression</strong>,
+                    the <strong>Django Framework</strong>, and advanced <strong>Natural Language Processing (NLP)</strong>
+                    techniques to accurately evaluate whether a news article is Real or Fabricated.
+                    The application also extracts context sentiments and records previous query metrics for auditing.
+                </p>
+           </div>
+
+         </div>
+       </div>
+     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
